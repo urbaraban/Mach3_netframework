@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace MACH3
+namespace Mach3_netframework.MACH3
 {
-    internal class Mach3Sensor
+    public class Mach3Sensor
     {
         public event EventHandler<bool> SensorChanged;
-        public string Name { get; set; } = "Empty";
         public int Number { get; }
-        public int TrueValue { get; }
+        public int CheckValue { get; }
         public bool Detect
         {
             get => _detect;
@@ -22,16 +21,20 @@ namespace MACH3
         }
         private bool _detect = false;
 
-        public Mach3Sensor(string name, int number, int truevalue)
+        public Mach3Sensor(int number, int checkvalue)
         {
-            this.Name = name;
             this.Number = number;
-            this.TrueValue = truevalue;
+            this.CheckValue = checkvalue;
+        }
+
+        public bool IsThis(int value)
+        {
+            return this.Number == value || (this.Number + 1) == value;
         }
 
         public void SetStat(int value)
         {
-            this.Detect = (this.TrueValue == value);
+            this.Detect = (this.CheckValue == value);
         }
     }
 }

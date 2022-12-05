@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MACH3.InpOut32x64
+namespace Mach3_netframework.MACH3.InpOut32x64
 {
-    internal class InpOut
+    public class InpOut
     {
         public bool m_bX64 { get; private set; } = false;
 
