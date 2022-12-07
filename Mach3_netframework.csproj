@@ -47,7 +47,7 @@
     <Compile Include="MACH3\Mach3AxisMotor.cs" />
     <Compile Include="MACH3\InpOut32x64\InpOut.cs" />
     <Compile Include="MACH3\Mach3.cs" />
-    <Compile Include="MACH3\Mach3Sensor.cs" />
+    <Compile Include="MACH3\Mach3SensorPoller.cs" />
     <Compile Include="MACH3\Mach3Toggle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

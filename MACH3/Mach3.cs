@@ -1,6 +1,6 @@
 ﻿using Mach3_netframework.MACH3.InpOut32x64;
 using Mach3_netframework.MACH3.Interface;
-using System.Collections.Generic;
+using System.Threading;
 
 namespace Mach3_netframework.MACH3
 {
@@ -12,8 +12,7 @@ namespace Mach3_netframework.MACH3
         public Log Logs { get; set; }
         public bool IsTurn { get; set; }
         public bool GetTurn() => IsTurn;
-        
-        private readonly InpOut inpOut = new InpOut();
+       
 
         public Mach3Toggle Spindle { get; }
         public Mach3Toggle Clamp { get; }
@@ -23,17 +22,15 @@ namespace Mach3_netframework.MACH3
         public Mach3AxisMotor Z { get; } = new Mach3AxisMotor("Z", new short[2, 2] { { 192, 128 }, { 64, 0 } });
 
         // public Mach3AxisMotor A { get; } = new Mach3AxisMotor("A", new short[2, 2] { { ??, ?? }, { ??, ?? } });
-        // public Mach3AxisMotor B { get; } = new Mach3AxisMotor("B", new short[2, 2] { { ??, ?? }, { ??, ?? } });
 
-        Mach3Sensor Sensor1 { get; } = new Mach3Sensor(14, 1);
-        Mach3Sensor Sensor2 { get; } = new Mach3Sensor(6, 1);
-        Mach3Sensor Sensor3 { get; } = new Mach3Sensor(2, 1);
-        Mach3Sensor Sensor4 { get; } = new Mach3Sensor(0, 1);
-        Mach3Sensor Sensor5 { get; } = new Mach3Sensor(0, 0);
+        public Mach3SensorPoller SensorPoller = new Mach3SensorPoller();
 
+        private readonly InpOut inpOut = new InpOut();
 
         public Mach3()
         {
+            SubribeObj(SensorPoller);
+
             this.Spindle = new Mach3Toggle(890, 8);
             SubribeObj(this.Spindle);
             this.Spindle.Off();
@@ -50,8 +47,6 @@ namespace Mach3_netframework.MACH3
             Logs?.Invoke("Make Y axis");
             SubribeObj(this.Z);
             Logs?.Invoke("Make Z axis");
-
-
         }
 
         public void SubribeObj(object obj)

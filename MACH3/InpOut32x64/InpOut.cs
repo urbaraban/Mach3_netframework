@@ -38,10 +38,12 @@ namespace Mach3_netframework.MACH3.InpOut32x64
         }
         public byte Inp(short PortAddress)
         {
+            byte result;
             if (m_bX64 == true)
-                return Convert.ToByte(Inp32_x64(PortAddress));
+                result = Inp32_x64(PortAddress);
             else
-                return Convert.ToByte(Inp32(PortAddress));
+                result = Inp32(PortAddress);
+            return result;
         }
 
         [DllImport("inpout32.dll")]
@@ -49,7 +51,7 @@ namespace Mach3_netframework.MACH3.InpOut32x64
         [DllImport("inpout32.dll")]
         private static extern void Out32(short PortAddress, short Data);
         [DllImport("inpout32.dll")]
-        private static extern char Inp32(short PortAddress);
+        private static extern byte Inp32(short PortAddress);
 
         [DllImport("inpout32.dll")]
         private static extern void DlPortWritePortUshort(short PortAddress, ushort Data);
@@ -72,7 +74,7 @@ namespace Mach3_netframework.MACH3.InpOut32x64
         [DllImport("inpoutx64.dll", EntryPoint = "Out32")]
         private static extern void Out32_x64(short PortAddress, short Data);
         [DllImport("inpoutx64.dll", EntryPoint = "Inp32")]
-        private static extern char Inp32_x64(short PortAddress);
+        private static extern byte Inp32_x64(short PortAddress);
 
         [DllImport("inpoutx64.dll", EntryPoint = "DlPortWritePortUshort")]
         private static extern void DlPortWritePortUshort_x64(short PortAddress, ushort Data);

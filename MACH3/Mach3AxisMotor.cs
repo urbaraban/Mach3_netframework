@@ -40,18 +40,7 @@ namespace Mach3_netframework.MACH3
         private readonly short[,] Ports;
 
         public bool InverseZero { get; set; }
-        public Mach3Sensor Sensor 
-        {
-            get => mashsensor;
-            set
-            {
-                if (mashsensor != null)
-                    mashsensor.SensorChanged -= Mashsensor_SensorChanged;
-                mashsensor = value;
-                mashsensor.SensorChanged += Mashsensor_SensorChanged;
-            }
-        }
-        private Mach3Sensor mashsensor;
+
         private void Mashsensor_SensorChanged(object sender, bool e)
         {
             if (e == true)
