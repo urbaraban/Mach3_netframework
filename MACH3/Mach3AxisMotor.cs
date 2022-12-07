@@ -1,5 +1,4 @@
 ﻿using Mach3_netframework.MACH3.Interface;
-using System;
 using System.Threading.Tasks;
 using static Mach3_netframework.MACH3.InpOut32x64.InpOut;
 using static Mach3_netframework.MACH3.Mach3;
@@ -14,22 +13,24 @@ namespace Mach3_netframework.MACH3
         public string Name { get; }
 
         public TurnDelegate TurnOnAll { get; set; }
+
+        public bool TryStart { get; set; } = false;
         public bool ThisStop => CheckStop();
         private bool CheckStop()
         {
             if (TurnOnAll != null)
             {
-                return TurnOnAll.Invoke() == false
-                    || Position == Minimum
-                    || Position == Maximum;
+                bool result = TurnOnAll.Invoke() == false || ((Position == Minimum || Position == Maximum) && TryStart == false);
+                this.TryStart = false;
+                return result;
             }
             return true;
         }
 
 
-        public int Minimum { get; set; } = 0;
-        public int Position { get; private set; } = 0;
-        public int Maximum { get; set; } = int.MaxValue;
+        public long Minimum { get; set; } = 0;
+        public long Position { get; private set; } = 0;
+        public long Maximum { get; set; } = int.MaxValue;
 
 
         /// <summary>
@@ -38,16 +39,6 @@ namespace Mach3_netframework.MACH3
         /// [1][0], [1][1] — Down move ports
         /// </summary>
         private readonly short[,] Ports;
-
-        public bool InverseZero { get; set; }
-
-        private void Mashsensor_SensorChanged(object sender, bool e)
-        {
-            if (e == true)
-            {
-                this.Position = InverseZero ? 0 : (int)(Maximum);
-            }
-        }
 
         public Mach3AxisMotor(string name, short[,] ports)
         {

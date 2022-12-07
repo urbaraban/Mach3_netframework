@@ -10,7 +10,7 @@ namespace Mach3_netframework.MACH3
         public delegate string Log(string msg);
 
         public Log Logs { get; set; }
-        public bool IsTurn { get; set; }
+        public bool IsTurn { get; set; } = true;
         public bool GetTurn() => IsTurn;
        
 
