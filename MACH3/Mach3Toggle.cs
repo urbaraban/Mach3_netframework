@@ -21,12 +21,8 @@ namespace Mach3_netframework.MACH3
         public OutDelegate Out { get; set; }
         public InpDelegate Inp { get; set; }
 
-
         private readonly short Port; //890
         private readonly byte Delta;
-        private readonly int OnWait;
-        private readonly int OffWait;
-
 
         public Mach3Toggle(short port, byte delta)
         { 
@@ -34,19 +30,20 @@ namespace Mach3_netframework.MACH3
             this.Delta = delta;
         }
 
-        public void On(int wait)
+        public async Task On(int wait)
         {
-            if (ThisStop == false)
-            {
-                byte b = (byte)(Inp.Invoke(this.Port) - this.Delta);
-                Out?.Invoke(this.Port, b);
-                for (int i = 0; i < wait; i += 50)
+            await Task.Run(() => {
+                if (ThisStop == false)
                 {
-                    Task.Delay(50);
-                    if (ThisStop == true)
-                        this.Off();
+                    byte b = (byte)(Inp.Invoke(this.Port) - this.Delta);
+                    Out?.Invoke(this.Port, b);
+                    for (int i = 0; i < wait; i += 50)
+                    {
+                        if (ThisStop == true)
+                            this.Off();
+                    }
                 }
-            }
+            });
         }
 
         public void Off()

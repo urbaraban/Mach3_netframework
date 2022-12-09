@@ -1,5 +1,6 @@
 ﻿using Mach3_netframework.MACH3.Interface;
-using System.Threading.Tasks;
+using Mach3_netframework.Tools;
+using System;
 using static Mach3_netframework.MACH3.InpOut32x64.InpOut;
 using static Mach3_netframework.MACH3.Mach3;
 
@@ -20,18 +21,17 @@ namespace Mach3_netframework.MACH3
         {
             if (TurnOnAll != null)
             {
-                bool result = TurnOnAll.Invoke() == false || ((Position == Minimum || Position == Maximum) && TryStart == false);
+                bool result = TurnOnAll.Invoke() == false ||
+                    ((Position < Minimum || Position > Maximum) && TryStart == false);
                 this.TryStart = false;
                 return result;
             }
             return true;
         }
 
-
         public long Minimum { get; set; } = 0;
         public long Position { get; private set; } = 0;
         public long Maximum { get; set; } = int.MaxValue;
-
 
         /// <summary>
         /// Ports 
@@ -46,18 +46,20 @@ namespace Mach3_netframework.MACH3
             Ports = ports;
         }
 
-        public void Tic(int vector, int delay)
+        public void Tic(int vector, long delay)
         {
             if (this.ThisStop == false)
             {
                 int index = (1 + vector) / 2;
 
                 Out?.Invoke(888, Ports[index, 0]);
-                Task.Delay(delay);
+                TimeTools.udelay(delay);
                 Out?.Invoke(888, Ports[index, 1]);
-                Task.Delay(delay);
+                TimeTools.udelay(delay);
                 Position += vector;
             }
         }
+
+        public void SetZero() => this.Position = 0;
     }
 }
