@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using static Mach3_netframework.MACH3.Mach3;
 
 namespace Mach3_netframework.MACH3.InpOut32x64
 {
@@ -11,21 +8,46 @@ namespace Mach3_netframework.MACH3.InpOut32x64
     {
         public bool m_bX64 { get; private set; } = false;
 
-        public delegate byte InpDelegate(short PortAddress);
+        public delegate short InpDelegate(short PortAddress);
         public delegate void OutDelegate(short PortAddress, short Data);
 
-        public InpOut()
+        public Log Logs { get; set; }
+
+        public InpOut(Log log)
         {
-            uint nResult = 0;
+            this.Logs = log;
+        }
+
+        public void Init()
+        {
             try
             {
-                nResult = IsInpOutDriverOpen();
+                uint nResult = 0;
+                try
+                {
+                    nResult = IsInpOutDriverOpen();
+                }
+                catch (BadImageFormatException)
+                {
+                    nResult = IsInpOutDriverOpen_x64();
+                    if (nResult != 0)
+                        m_bX64 = true;
+
+                }
+
+                if (nResult == 0)
+                {
+                    Logs?.Invoke("Unable to open InpOut32 driver");
+                }
+                else
+                {
+                    Logs?.Invoke("InpOut32 driver enable");
+                }
             }
-            catch (BadImageFormatException)
+            catch (DllNotFoundException ex)
             {
-                nResult = IsInpOutDriverOpen_x64();
-                if (nResult != 0)
-                    m_bX64 = true;
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                Logs?.Invoke("Unable to find InpOut32.dll");
             }
         }
 
@@ -36,9 +58,9 @@ namespace Mach3_netframework.MACH3.InpOut32x64
             else
                 Out32(PortAddress, Data);
         }
-        public byte Inp(short PortAddress)
+        public short Inp(short PortAddress)
         {
-            byte result;
+            short result;
             if (m_bX64 == true)
                 result = Inp32_x64(PortAddress);
             else
