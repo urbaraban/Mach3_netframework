@@ -22,7 +22,7 @@ namespace Mach3_netframework.MACH3
             if (TurnOnAll != null)
             {
                 bool result = TurnOnAll.Invoke() == false ||
-                    ((Position < Minimum || Position > Maximum) && TryStart == false);
+                    ((Position > Maximum) && TryStart == false);
                 this.TryStart = false;
                 return result;
             }

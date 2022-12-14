@@ -10,38 +10,35 @@ namespace Mach3_netframework.MACH3
 {
     public class Mach3SensorPoller : IInpOutElement
     {
-        public event EventHandler UpdateSensor;
+        public event EventHandler<byte> UpdateRequest;
+        public event EventHandler<int> UpdateSensor;
 
         public OutDelegate Out { get; set; }
         public InpDelegate Inp { get; set; }
 
-        public short Request { get; set; }
-
-        public byte[] pins { get; } = new byte[8];
+        public bool[] pins { get; } = new bool[8];
 
         private Timer poller { get; }
 
         public Mach3SensorPoller()
         {
             TimerCallback timerCallback = new TimerCallback(PollingSensors);
-            this.poller = new Timer(timerCallback, 0, 0, 10);
+            this.poller = new Timer(timerCallback, 0, 0, 1);
         }
 
         private void PollingSensors(object obj)
         {
             if (Inp != null)
             {
-                Request = Inp(889);
-                for (int i = 7; i > -1; i -= 1) 
-                {
-                    byte temp = (byte)(Request % 2);
-                    if (temp != pins[i])
-                    {
-                        pins[i] = temp;
-                        UpdateSensor?.Invoke(this, EventArgs.Empty);
-                    }
+                byte request = Inp(889);
+                // byte request = 159;
+                UpdateRequest?.Invoke(this, request);
 
-                    Request /= 2;
+                for (int i = 0; i < 7; i += 1)
+                {
+                    pins[i] = (request % 2 == 0);
+                    UpdateSensor?.Invoke(this, i);
+                    request /= 2;
                 }
             }
         }

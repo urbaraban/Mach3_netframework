@@ -16,9 +16,9 @@ namespace Mach3_netframework.MACH3
         public Mach3Toggle Spindle { get; }
         public Mach3Toggle Clamp { get; }
 
-        public Mach3AxisMotor X { get; } = new Mach3AxisMotor("X", new short[2, 2] { { 16, 0 }, { 48, 32 } });
-        public Mach3AxisMotor Y { get; } = new Mach3AxisMotor("Y", new short[2, 2] { { 5, 0 }, { 15, 10 } });
-        public Mach3AxisMotor Z { get; } = new Mach3AxisMotor("Z", new short[2, 2] { { 192, 128 }, { 64, 0 } });
+        public Mach3AxisMotor X { get; } = new Mach3AxisMotor("X", new short[2, 2] { { 48, 32 }, { 16, 0 }  });
+        public Mach3AxisMotor Y { get; } = new Mach3AxisMotor("Y", new short[2, 2] { { 5, 0 }, { 15, 10 }   });
+        public Mach3AxisMotor Z { get; } = new Mach3AxisMotor("Z", new short[2, 2] { { 64, 0 }, { 192, 128 } });
 
         // public Mach3AxisMotor A { get; } = new Mach3AxisMotor("A", new short[2, 2] { { ??, ?? }, { ??, ?? } });
 
@@ -32,6 +32,9 @@ namespace Mach3_netframework.MACH3
 
             this.inpOut = new InpOut(log);
             this.inpOut.Init();
+
+            this.inpOut.Out(888, 0);
+            this.inpOut.Out(890, 14);
 
             SubribeObj(SensorPoller);
 

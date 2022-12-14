@@ -8,7 +8,7 @@ namespace Mach3_netframework.MACH3.InpOut32x64
     {
         public bool m_bX64 { get; private set; } = false;
 
-        public delegate short InpDelegate(short PortAddress);
+        public delegate byte InpDelegate(short PortAddress);
         public delegate void OutDelegate(short PortAddress, short Data);
 
         public Log Logs { get; set; }
@@ -58,9 +58,9 @@ namespace Mach3_netframework.MACH3.InpOut32x64
             else
                 Out32(PortAddress, Data);
         }
-        public short Inp(short PortAddress)
+        public byte Inp(short PortAddress)
         {
-            short result;
+            byte result;
             if (m_bX64 == true)
                 result = Inp32_x64(PortAddress);
             else
