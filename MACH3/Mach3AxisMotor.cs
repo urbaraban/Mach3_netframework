@@ -15,19 +15,7 @@ namespace Mach3_netframework.MACH3
 
         public TurnDelegate TurnOnAll { get; set; }
 
-        public bool TryStart { get; set; } = false;
-        public bool ThisStop => CheckStop();
-        private bool CheckStop()
-        {
-            if (TurnOnAll != null)
-            {
-                bool result = TurnOnAll.Invoke() == false ||
-                    ((Position > Maximum) && TryStart == false);
-                this.TryStart = false;
-                return result;
-            }
-            return true;
-        }
+        public bool ThisStop => TurnOnAll.Invoke() == false;
 
         public long Minimum { get; set; } = 0;
         public long Position { get; private set; } = 0;
@@ -46,20 +34,23 @@ namespace Mach3_netframework.MACH3
             Ports = ports;
         }
 
-        public void Tic(int vector, long delay)
+        public void Tic(MoveVector vector, long delay)
         {
-            if (this.ThisStop == false)
-            {
-                int index = (1 + vector) / 2;
+            int index = (1 + (int)vector) / 2;
 
-                Out?.Invoke(888, Ports[index, 0]);
-                TimeTools.udelay(delay);
-                Out?.Invoke(888, Ports[index, 1]);
-                TimeTools.udelay(delay);
-                Position += vector;
-            }
+            Out?.Invoke(888, Ports[index, 0]);
+            TimeTools.udelay(delay);
+            Out?.Invoke(888, Ports[index, 1]);
+            TimeTools.udelay(delay);
+            Position += (int)vector;
         }
 
         public void SetZero() => this.Position = 0;
+    }
+
+    public enum MoveVector
+    {
+        UP = 1,
+        DOWN = -1
     }
 }

@@ -16,7 +16,7 @@ namespace Mach3_netframework.MACH3
         public OutDelegate Out { get; set; }
         public InpDelegate Inp { get; set; }
 
-        public bool[] pins { get; } = new bool[8];
+        public int[] pins { get; } = new int[8];
 
         private Timer poller { get; }
 
@@ -30,13 +30,11 @@ namespace Mach3_netframework.MACH3
         {
             if (Inp != null)
             {
-                byte request = Inp(889);
-                // byte request = 159;
+                byte request = Inp(889); // 
                 UpdateRequest?.Invoke(this, request);
-
-                for (int i = 0; i < 7; i += 1)
+                for (int i = 0; i < pins.Length; i += 1)
                 {
-                    pins[i] = (request % 2 == 0);
+                    pins[i] = request % 2;
                     UpdateSensor?.Invoke(this, i);
                     request /= 2;
                 }

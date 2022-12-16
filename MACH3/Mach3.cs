@@ -16,8 +16,8 @@ namespace Mach3_netframework.MACH3
         public Mach3Toggle Spindle { get; }
         public Mach3Toggle Clamp { get; }
 
-        public Mach3AxisMotor X { get; } = new Mach3AxisMotor("X", new short[2, 2] { { 48, 32 }, { 16, 0 }  });
-        public Mach3AxisMotor Y { get; } = new Mach3AxisMotor("Y", new short[2, 2] { { 5, 0 }, { 15, 10 }   });
+        public Mach3AxisMotor X { get; } = new Mach3AxisMotor("X", new short[2, 2] { { 15, 10 }, { 5, 0 } });
+        public Mach3AxisMotor Y { get; } = new Mach3AxisMotor("Y", new short[2, 2] { { 48, 32 }, { 16, 0 } });
         public Mach3AxisMotor Z { get; } = new Mach3AxisMotor("Z", new short[2, 2] { { 64, 0 }, { 192, 128 } });
 
         // public Mach3AxisMotor A { get; } = new Mach3AxisMotor("A", new short[2, 2] { { ??, ?? }, { ??, ?? } });
@@ -40,12 +40,10 @@ namespace Mach3_netframework.MACH3
 
             this.Spindle = new Mach3Toggle(890, 8);
             SubribeObj(this.Spindle);
-            this.Spindle.Off();
             Logs?.Invoke("Spindle load and stop");
 
             this.Clamp = new Mach3Toggle(890, 2);
             SubribeObj(this.Clamp);
-            this.Clamp.Off();
             Logs?.Invoke("Clamp load and stop");
 
             SubribeObj(this.X);
