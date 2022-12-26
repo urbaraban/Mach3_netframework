@@ -1,4 +1,6 @@
 ﻿using Mach3_netframework.MACH3.Interface;
+using Mach3_netframework.Tools;
+using System.Threading;
 using System.Threading.Tasks;
 using static Mach3_netframework.MACH3.InpOut32x64.InpOut;
 using static Mach3_netframework.MACH3.Mach3;
@@ -30,20 +32,19 @@ namespace Mach3_netframework.MACH3
             this.Delta = delta;
         }
 
-        public async Task On(int wait)
+        public void On(int wait)
         {
-            await Task.Run(() => {
-                if (ThisStop == false)
+            if (ThisStop == false)
+            {
+                byte b = (byte)(Inp.Invoke(this.Port) - this.Delta);
+                Out?.Invoke(this.Port, b);
+                for (int i = 0; i < wait; i += 1000)
                 {
-                    byte b = (byte)(Inp.Invoke(this.Port) - this.Delta);
-                    Out?.Invoke(this.Port, b);
-                    for (int i = 0; i < wait; i += 50)
-                    {
-                        if (ThisStop == true)
-                            this.Off();
-                    }
+                    TimeTools.udelay(1000);
+                    if (ThisStop == true)
+                        this.Off();
                 }
-            });
+            }
         }
 
         public void Off()
