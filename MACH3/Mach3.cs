@@ -66,6 +66,5 @@ namespace Mach3_netframework.MACH3
                 outElement.Out = inpOut.Out;
             }
         }
-
     }
 }

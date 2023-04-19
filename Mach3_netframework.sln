@@ -5,6 +5,10 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mach3_netframework", "Mach3_netframework.csproj", "{CCCB99C4-B6D9-4311-9E5F-EB513C0EC90C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0B663DED-2BB1-4A44-8DE7-E5386CD7FC76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D4F8A5C3-9F62-40E1-8397-7E0453EAB02F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +22,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CCCB99C4-B6D9-4311-9E5F-EB513C0EC90C} = {0B663DED-2BB1-4A44-8DE7-E5386CD7FC76}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80AF66F5-4DCF-42C8-9DDE-6DFFC8DADA50}
